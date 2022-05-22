@@ -11,19 +11,19 @@ public class ThreadTails extends Thread{
   private final int DOWN = 1;
   private final int LEFT = 2;
   private final int RIGHT = 3;
-
+  private int oldSemaphore = -1;
   private Tails tails;
   private Background background;
 
-  private int fps = 30;
+  private int fps = 15;
   private int sleepTime = 50;
 
-  private boolean sonicFlag = false;
+  private boolean tailsFlag = false;
 
   public ThreadTails(Image carsImage, Background background){
     this.background = background;
     this.tails = new Tails(carsImage);
-  } 
+  }
 
   @Override
   public void run(){
@@ -33,181 +33,84 @@ public class ThreadTails extends Thread{
       running();
   }
 
-  private void running(){
-    try{
-      tails.setTurn(DOWN);
+  private void move(){
+    try {
 
-      while(tails.getY() <= 300){//regiao G1 e fim da regiao G4, J1
-        tails.setBounds(tails.getX(), tails.getY()+fps, tails.getWidth(), tails.getHeight());
-        background.repaint();
-
-        Thread.sleep(sleepTime);
+      switch(tails.getTurn()){
+        case 0:
+          tails.setBounds(tails.getX(), tails.getY()-fps, tails.getWidth(), tails.getHeight());
+          break;
+        case 1:
+          tails.setBounds(tails.getX(), tails.getY()+fps, tails.getWidth(), tails.getHeight());
+          break;
+        case 2:
+          tails.setBounds(tails.getX()-fps, tails.getY(), tails.getWidth(), tails.getHeight());
+          break;
+        case 3:
+          tails.setBounds(tails.getX()+fps, tails.getY(), tails.getWidth(), tails.getHeight());
+          break;
+        default:
+        break;
       }
-      
-      if(MainScreen.getSemaphore(33).availablePermits() < 1 && sonicFlag){
-        MainScreen.getSemaphore(33).release();//up semaforo G4
-      }
-      else{
-        sonicFlag = true;
-      }
+      background.repaint();
 
-      if(MainScreen.getSemaphore(31).availablePermits() < 1)
-        MainScreen.getSemaphore(31).release();//up semaforo J1
-
-      MainScreen.getSemaphore(18).acquire();//down semaforo G1
-
-      while(tails.getY() <= 400){//fim da regiao G1 e comeco da G2
-        tails.setBounds(tails.getX(), tails.getY()+fps, tails.getWidth(), tails.getHeight());
-        background.repaint();
-
-        Thread.sleep(sleepTime);
-      }
-
-      if(MainScreen.getSemaphore(18).availablePermits() < 1)
-        MainScreen.getSemaphore(18).release();//up semaforo G1
-
-      MainScreen.getSemaphore(22).acquire();//down semaforo G2
-
-      while(tails.getY() <= 500){//fim regiao G2 e comeco G3, H1, J2
-        tails.setBounds(tails.getX(), tails.getY()+fps, tails.getWidth(), tails.getHeight());
-        background.repaint();
-
-        Thread.sleep(sleepTime);
-      }
-
-      if(MainScreen.getSemaphore(22).availablePermits() < 1)
-        MainScreen.getSemaphore(22).release();//up semaforo G2
-
-      MainScreen.getSemaphore(25).acquire();//down semaforo G3
-      MainScreen.getSemaphore(26).acquire();//down semaforo H1
-      MainScreen.getSemaphore(32).acquire();//down semaforo J2
-
-      while(tails.getY() <= 550){
-        tails.setBounds(tails.getX(), tails.getY()+fps, tails.getWidth(), tails.getHeight());
-        background.repaint();
-
-        Thread.sleep(sleepTime);
-      }
-
-      tails.setTurn(RIGHT);
-
-      while(tails.getX() <= 650){//regiao I1
-        tails.setBounds(tails.getX()+fps, tails.getY(), tails.getWidth(), tails.getHeight());
-        background.repaint();
-
-        Thread.sleep(sleepTime);
-      }
-
-      MainScreen.getSemaphore(29).acquire();//down semaforo I1
-
-      while(tails.getX() <= 780){//fim da regiao J2
-        tails.setBounds(tails.getX()+fps, tails.getY(), tails.getWidth(), tails.getHeight());
-        background.repaint();
-
-        Thread.sleep(sleepTime);
-      }
-
-      if(MainScreen.getSemaphore(32).availablePermits() < 1)
-        MainScreen.getSemaphore(32).release();//up semaforo J2
-
-      while(tails.getX() <= 970){//fim da regiao H1
-        tails.setBounds(tails.getX()+fps, tails.getY(), tails.getWidth(), tails.getHeight());
-        background.repaint();
-
-        Thread.sleep(sleepTime);
-      }
-
-      if(MainScreen.getSemaphore(26).availablePermits() < 1)
-        MainScreen.getSemaphore(26).release();//up semaforo H1
-      
-      while(tails.getX() <= 1030){//fim da regiao G3 e comeco da G4
-        tails.setBounds(tails.getX()+fps, tails.getY(), tails.getWidth(), tails.getHeight());
-        background.repaint();
-
-        Thread.sleep(sleepTime);
-      }
-
-      if(MainScreen.getSemaphore(25).availablePermits() < 1)
-        MainScreen.getSemaphore(25).release();//up semaforo G3
-
-      tails.setTurn(UP);//muda a animacao do carro para correr para cima
-
-      MainScreen.getSemaphore(33).acquire();//down semaforo G4
-      
-      while(tails.getY() >= 400){//regiao H2
-        tails.setBounds(tails.getX(), tails.getY()-fps, tails.getWidth(), tails.getHeight());
-        background.repaint();
-
-        Thread.sleep(sleepTime);
-      }
-
-      MainScreen.getSemaphore(27).acquire();//down semaforo H2
-
-      while(tails.getY() >= 250){//fim da regiao compartilhada com shadow 1
-        tails.setBounds(tails.getX(), tails.getY()-fps, tails.getWidth(), tails.getHeight());
-        background.repaint();
-
-        Thread.sleep(sleepTime);
-      }
-
-      tails.setTurn(LEFT);
-
-      while(tails.getX() >= 1020){//fim regiao I1
-        tails.setBounds(tails.getX()-fps, tails.getY(), tails.getWidth(), tails.getHeight());
-        background.repaint();
-
-        Thread.sleep(sleepTime);
-      }
-
-      if(MainScreen.getSemaphore(29).availablePermits() < 1)
-        MainScreen.getSemaphore(29).release();//up semaforo I1
-
-      while(tails.getX() >= 870){//fim regiao H2
-        tails.setBounds(tails.getX()-fps, tails.getY(), tails.getWidth(), tails.getHeight());
-        background.repaint();
-
-        Thread.sleep(sleepTime);
-      }
-
-      if(MainScreen.getSemaphore(27).availablePermits() < 1)
-        MainScreen.getSemaphore(27).release();//up semaforo H2
-
-      while(tails.getX() >= 810){//regiao I2, J1
-        tails.setBounds(tails.getX()-fps, tails.getY(), tails.getWidth(), tails.getHeight());
-        background.repaint();
-
-        Thread.sleep(sleepTime);
-      }
-
-      MainScreen.getSemaphore(30).acquire();//down semaforo I2
-      MainScreen.getSemaphore(31).acquire();//down semaforo J1
-
-      while(tails.getX() >= 680){//fim da regiao I2
-        tails.setBounds(tails.getX()-fps, tails.getY(), tails.getWidth(), tails.getHeight());
-        background.repaint();
-
-        Thread.sleep(sleepTime);
-      }
-
-      if(MainScreen.getSemaphore(30).availablePermits() < 1)
-        MainScreen.getSemaphore(30).release();//up semaforo H2
-
-      while(tails.getX() >= 560){
-        tails.setBounds(tails.getX()-fps, tails.getY(), tails.getWidth(), tails.getHeight());
-        background.repaint();
-
-        Thread.sleep(sleepTime);
-      }
-
-      while(tails.getX() >= 560){
-        tails.setBounds(tails.getX()-fps, tails.getY(), tails.getWidth(), tails.getHeight());
-        background.repaint();
-
-        Thread.sleep(sleepTime);
-      }
-    }catch(InterruptedException e){
+      Thread.sleep(sleepTime);
+    } catch (InterruptedException e) {
       e.printStackTrace();
     }
+  }
+
+  private void goTo(int semaphore){
+    try{
+      while(MainScreen.stillFar(semaphore, tails.getX(), tails.getY())){
+        this.move();
+      }
+      if(oldSemaphore!=semaphore && oldSemaphore != -1){
+        MainScreen.getSemaphore(oldSemaphore).release();
+      }
+      MainScreen.getSemaphore(semaphore).acquire();
+
+      oldSemaphore = semaphore;
+    }
+    catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void running(){
+
+    tails.setTurn(UP);
+    this.goTo(24);
+    this.goTo(18);
+    this.goTo(12);
+    this.goTo(6);
+    this.goTo(0);
+
+    tails.setTurn(RIGHT);
+    this.goTo(1);
+    this.goTo(2);
+
+    tails.setTurn(DOWN);
+    this.goTo(8);
+    this.goTo(14);
+    this.goTo(20);
+
+    tails.setTurn(RIGHT);
+    this.goTo(21);
+    this.goTo(22);
+    this.goTo(23);
+
+    tails.setTurn(DOWN);
+    this.goTo(29);
+    this.goTo(35);
+
+    tails.setTurn(LEFT);
+    this.goTo(34);
+    this.goTo(33);
+    this.goTo(32);
+    this.goTo(31);
+    this.goTo(30);
+
   }
   public void setSleepTime(int sleepTime){
     switch(sleepTime){

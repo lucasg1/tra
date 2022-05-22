@@ -25,7 +25,7 @@ public class Eggman extends JLabel{
 
 
   public Eggman(Image carsImage){
-    this.setBounds(925, 25, widthUpDown, 60);
+    this.setBounds(225, 255, widthUpDown, 60);
 
     this.upSprites = new ArrayList<BufferedImage>();
     this.downSprites = new ArrayList<BufferedImage>();
@@ -124,6 +124,9 @@ public class Eggman extends JLabel{
     this.turn = turn;
   }
 
+  public int getTurn(){
+    return this.turn;
+  }
 
   public void setSpeed(int speed){
     switch(speed){

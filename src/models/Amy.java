@@ -24,7 +24,7 @@ public class Amy extends JLabel{
   private int widthLeftRight = 50;
 
   public Amy(Image carsImage){
-    this.setBounds(230, 560, widthUpDown, 60);
+    this.setBounds(225, 152, widthUpDown, 60);
 
     this.upSprites = new ArrayList<BufferedImage>();
     this.downSprites = new ArrayList<BufferedImage>();
@@ -86,7 +86,7 @@ public class Amy extends JLabel{
     rightAnimator.setSpeed(speed);
   }
 
- 
+
   private void paintUp(Graphics g){
     this.setBounds(this.getX(), this.getY(), widthUpDown, 70);
 
@@ -122,7 +122,11 @@ public class Amy extends JLabel{
 
   public void setTurn(int turn){
     this.turn = turn;
-  } 
+  }
+
+  public int getTurn(){
+    return this.turn;
+  }
 
   public void setSpeed(int speed){
     switch(speed){

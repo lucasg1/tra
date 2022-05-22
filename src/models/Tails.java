@@ -23,9 +23,9 @@ public class Tails extends JLabel{
   private int widthUpDown = 60;
   private int widthLeftRight = 50;
 
- 
+
   public Tails(Image carsImage){
-    this.setBounds(550, 300, widthUpDown, 60);
+    this.setBounds(225, 595, widthUpDown, 60);
 
     this.upSprites = new ArrayList<BufferedImage>();
     this.downSprites = new ArrayList<BufferedImage>();
@@ -87,7 +87,7 @@ public class Tails extends JLabel{
     rightAnimator.setSpeed(speed);
   }
 
- 
+
   private void paintUp(Graphics g){
     this.setBounds(this.getX(), this.getY(), widthUpDown, 70);
 
@@ -113,7 +113,7 @@ public class Tails extends JLabel{
     this.repaint();
   }
 
- 
+
   private void paintRight(Graphics g){
     this.setBounds(this.getX(), this.getY(), widthLeftRight, 60);
 
@@ -124,7 +124,11 @@ public class Tails extends JLabel{
 
   public void setTurn(int turn){
     this.turn = turn;
-  } 
+  }
+
+  public int getTurn(){
+    return this.turn;
+  }
 
   public void setSpeed(int speed){
     switch(speed){

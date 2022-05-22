@@ -24,7 +24,7 @@ public class Rouge extends JLabel{
   private int widthLeftRight = 50;
 
   public Rouge(Image carsImage){
-    this.setBounds(350, 30, widthUpDown, 60);
+    this.setBounds(542, 371, widthUpDown, 60);
 
     this.upSprites = new ArrayList<BufferedImage>();
     this.downSprites = new ArrayList<BufferedImage>();
@@ -128,6 +128,9 @@ public class Rouge extends JLabel{
     this.turn = turn;
   }
 
+  public int getTurn(){
+    return this.turn;
+  }
 
   public void setSpeed(int speed){
     switch(speed){

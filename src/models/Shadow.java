@@ -23,9 +23,9 @@ public class Shadow extends JLabel{
   private int widthUpDown = 60;
   private int widthLeftRight = 50;
 
- 
+
   public Shadow(Image carsImage){
-    this.setBounds(925, 25, widthUpDown, 60);
+    this.setBounds(542, 595, widthUpDown, 60);
 
     this.upSprites = new ArrayList<BufferedImage>();
     this.downSprites = new ArrayList<BufferedImage>();
@@ -95,7 +95,7 @@ public class Shadow extends JLabel{
     this.repaint();
   }
 
- 
+
   private void paintDown(Graphics g){
     this.setBounds(this.getX(), this.getY(), widthUpDown, 70);
 
@@ -122,8 +122,11 @@ public class Shadow extends JLabel{
 
   public void setTurn(int turn){
     this.turn = turn;
-  } 
+  }
 
+  public int getTurn(){
+    return this.turn;
+  }
 
   public void setSpeed(int speed){
     switch(speed){
@@ -153,4 +156,4 @@ public class Shadow extends JLabel{
         break;
     }
   }
-} 
+}

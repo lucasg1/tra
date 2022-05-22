@@ -18,7 +18,7 @@ public class Sonic extends JLabel{
   private Animator upAnimator, downAnimator, leftAnimator, rightAnimator;
   private ArrayList<BufferedImage> upSprites, downSprites, leftSprites, rightSprites;
 
-  private int turn = -1;
+  private int turn = 0;
   private int speed = 50;
   private int widthUpDown = 70;
   private int widthLeftRight = 60;
@@ -38,7 +38,7 @@ public class Sonic extends JLabel{
   @Override
   public void paintComponent(Graphics g){
     super.paintComponent(g);
-    
+
     if(turn == UP)
       paintUp(g);
     else if(turn == DOWN)
@@ -95,7 +95,7 @@ public class Sonic extends JLabel{
     this.repaint();
   }
 
- 
+
   private void paintDown(Graphics g){
     this.setBounds(this.getX(), this.getY(), widthUpDown, 70);
 
@@ -113,7 +113,7 @@ public class Sonic extends JLabel{
     this.repaint();
   }
 
- 
+
   private void paintRight(Graphics g){
     this.setBounds(this.getX(), this.getY(), widthLeftRight, 60);
 
@@ -125,7 +125,11 @@ public class Sonic extends JLabel{
 
   public void setTurn(int turn){
     this.turn = turn;
-  } 
+  }
+
+  public int getTurn(){
+    return this.turn;
+  }
 
   public void setSpeed(int speed){
     switch(speed){

@@ -24,7 +24,7 @@ public class Knuckles extends JLabel{
   private int widthLeftRight = 50;
 
   public Knuckles(Image carsImage){
-    this.setBounds(350, 30, widthUpDown, 60);
+    this.setBounds(920, 47, widthUpDown, 60);
 
     this.upSprites = new ArrayList<BufferedImage>();
     this.downSprites = new ArrayList<BufferedImage>();
@@ -50,7 +50,7 @@ public class Knuckles extends JLabel{
       paintRight(g);
   }
 
- 
+
   private void animate(){
     BufferedImage spriteSheet = (BufferedImage)carsImage;
     SpriteSheet spriteSheetClass = new SpriteSheet(spriteSheet);
@@ -88,7 +88,7 @@ public class Knuckles extends JLabel{
     rightAnimator.setSpeed(speed);
   }
 
- 
+
   private void paintUp(Graphics g){
     this.setBounds(this.getX(), this.getY(), widthUpDown, 70);
 
@@ -123,11 +123,14 @@ public class Knuckles extends JLabel{
     this.repaint();
   }
 
-  
+
   public void setTurn(int turn){
     this.turn = turn;
-  } 
+  }
 
+  public int getTurn(){
+    return this.turn;
+  }
 
   public void setSpeed(int speed){
     switch(speed){
