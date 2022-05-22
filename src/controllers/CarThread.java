@@ -22,7 +22,7 @@ public class CarThread extends Thread{
   protected int oldPosX = -1;
   protected int oldPosY = -1;
   protected int oldSemaphore;
-
+  protected boolean carTurnedOn = true;
   protected Car car;
   protected Background background;
 
@@ -43,9 +43,20 @@ public class CarThread extends Thread{
     while(true)
       running();
   }
+
+  public void turnOff(){
+    if(oldSemaphore != -1) MainScreen.getSemaphore(oldSemaphore).release();
+    this.carTurnedOn = false;
+    background.remove(car);
+  }
+
+  public void turnOn(){
+    background.add(car);
+    this.carTurnedOn = true;
+  }
+
   protected void move(){
     try {
-
       switch(car.getTurn()){
         case 0:
           car.setBounds(car.getX(), car.getY()-fps, car.getWidth(), car.getHeight());
@@ -65,6 +76,10 @@ public class CarThread extends Thread{
       background.repaint();
 
       Thread.sleep(sleepTime);
+      while(!carTurnedOn){
+        CarThread.sleep(100);
+      }
+
     } catch (InterruptedException e) {
       e.printStackTrace();
     }

@@ -11,7 +11,11 @@ import javax.swing.JCheckBox;
 import javax.swing.BorderFactory;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.Action;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Font;
@@ -163,7 +167,7 @@ public class Background extends JPanel{
 
   private void createCheckBoxes(){
     for(int i=0; i<7; i++){
-      JCheckBox checkbox = new JCheckBox();
+      JCheckBox checkbox = new JCheckBox("", true);
       checkbox.setBounds(1360, 120+50*i, 25, 25);
       checkboxes.add(checkbox);
       this.add(checkbox);
@@ -200,12 +204,31 @@ public class Background extends JPanel{
 
   private void addListener(){
     for(int i=0; i<7; i++){
-      checkboxes.get(i).addChangeListener(new ChangeListener() {
-        public void stateChanged(ChangeEvent e){
-          JCheckBox check = (JCheckBox)e.getSource();
-          // TO DO
-        }
+      CarThread c = carList.get(i);
+      checkboxes.get(i).addItemListener(new ItemListener(){
+        public void itemStateChanged(ItemEvent e) {
+          JCheckBox checkb = (JCheckBox)e.getSource();
+          if(checkb.isSelected()){
+            c.turnOn();
+          }
+          else{
+            c.turnOff();
+          }
+      }
       });
+      /*checkboxes.get(i).addChangeListener(new ChangeListener() {
+        public void stateChanged(ChangeEvent e){
+          JCheckBox checkb = (JCheckBox)e.getSource();
+          if(checkb.isSelected()){
+            System.out.println("ligou");
+            c.turnOn();
+          }
+          else{
+            System.out.println("desligou");
+            c.turnOff();
+          }
+        }
+      });*/
     }
 
     for(int j = 0; j < 7; j++){
