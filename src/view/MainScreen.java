@@ -4,9 +4,15 @@ import javax.swing.JFrame;
 import java.util.concurrent.Semaphore;
 import java.lang.Math;
 
+/**
+ * Classe controladora principal do projeto, esta irá chamar
+ * todos processos, desde desenhar o background, até criar as threads
+ * necessárias parar os carros
+ */
+
 public class MainScreen extends JFrame{
   private final int SIZE_ARRAY_SEMAPHORES = 36;
-  private static Semaphore[][] semaphores;
+  private static Semaphore[] semaphores;
   // intersection[i][0] = x
   // intersection[i][1] = y
   public static int[][] intersection;
@@ -19,12 +25,10 @@ public class MainScreen extends JFrame{
     this.calculateIntersectionPositions();
 
     this.background = new Background();
-    MainScreen.semaphores = new Semaphore[SIZE_ARRAY_SEMAPHORES][4];
+    MainScreen.semaphores = new Semaphore[SIZE_ARRAY_SEMAPHORES];
 
     for(int i=0; i<SIZE_ARRAY_SEMAPHORES; i++){
-      for(int j=0; j<4; j++){
-      MainScreen.semaphores[i][j] = new Semaphore(1, true);
-      }
+      MainScreen.semaphores[i] = new Semaphore(1, true);
     }
 
     this.initGUIComponents();
@@ -41,15 +45,12 @@ public class MainScreen extends JFrame{
   }
 
   public static Semaphore getSemaphore(int index){
-    return semaphores[index][0];
+    return semaphores[index];
   }
 
   public static boolean stillFar(int semaphore, int x, int y){
     double distance = Math.sqrt((intersection[semaphore][0]-x)*(intersection[semaphore][0]-x)+
     (intersection[semaphore][1]-y)*(intersection[semaphore][1]-y));
-    /*System.out.println("sonic:" + x + " , " + y);
-    System.out.println("semaforo:" + intersection[semaphore][0] + " , " + intersection[semaphore][1]);
-    System.out.println("distancia:" + distance);*/
     if(distance > 25.0)
       return true;
     else return false;

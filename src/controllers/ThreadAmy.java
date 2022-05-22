@@ -2,84 +2,20 @@ package controllers;
 
 import models.Amy;
 import view.Background;
-import view.MainScreen;
-import java.lang.Thread;
 import java.awt.Image;
 
-public class ThreadAmy extends Thread{
-  private final int UP = 0;
-  private final int DOWN = 1;
-  private final int LEFT = 2;
-  private final int RIGHT = 3;
-  private long acquiredTime;
-  private int oldPosX = -1;
-  private int oldPosY = -1;
-  private int oldSemaphore;
+public class ThreadAmy extends CarThread{
+  protected Amy amy;
+  Background background;
 
-  private Amy amy;
-  private Background background;
-
-  private int fps = 15;
-  private int sleepTime = 50;
-
-
-  public ThreadAmy(Image carsImage, Background background){
-    this.background = background;
-    this.amy = new Amy(carsImage);
+  public ThreadAmy(Image carsImage, int x, int y, Background background){
+    super(carsImage, x, y, background);
+    this.car = new Amy(carsImage, x,y);
+    amy = (Amy) this.car;
   }
-
 
   @Override
-  public void run(){
-    background.addCar(amy);
-
-    while(true)
-      running();
-  }
-  private void move(){
-    try {
-
-      switch(amy.getTurn()){
-        case 0:
-          amy.setBounds(amy.getX(), amy.getY()-fps, amy.getWidth(), amy.getHeight());
-          break;
-        case 1:
-          amy.setBounds(amy.getX(), amy.getY()+fps, amy.getWidth(), amy.getHeight());
-          break;
-        case 2:
-          amy.setBounds(amy.getX()-fps, amy.getY(), amy.getWidth(), amy.getHeight());
-          break;
-        case 3:
-          amy.setBounds(amy.getX()+fps, amy.getY(), amy.getWidth(), amy.getHeight());
-          break;
-        default:
-        break;
-      }
-      background.repaint();
-
-      Thread.sleep(sleepTime);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-  }
-
-  private void goTo(int semaphore){
-    try{
-      while(MainScreen.stillFar(semaphore, amy.getX(), amy.getY())){
-        this.move();
-      }
-      if(oldSemaphore!=semaphore && oldSemaphore != -1){
-        MainScreen.getSemaphore(oldSemaphore).release();
-      }
-      MainScreen.getSemaphore(semaphore).acquire(); //peguei a permissão para passar no cruzamento nesse tempo
-      oldSemaphore = semaphore;
-    }
-    catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-  }
-
-  private void running(){
+  protected void running(){
 
     amy.setTurn(RIGHT);
     this.goTo(7);
@@ -103,26 +39,5 @@ public class ThreadAmy extends Thread{
     this.goTo(12);
     this.goTo(6);
 
-  }
-
-  public void setSleepTime(int sleepTime){
-    switch(sleepTime){
-      case 3:
-        this.sleepTime = 50;
-        break;
-      case 2:
-        this.sleepTime = 100;
-        break;
-      case 1:
-        this.sleepTime = 300;
-        break;
-      case 0:
-        this.sleepTime = 400;
-        break;
-    }
-  }
-
-  public Amy getAmy(){
-    return this.amy;
   }
 }

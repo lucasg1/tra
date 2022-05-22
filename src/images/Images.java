@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.awt.Image;
 import java.io.IOException;
 
+/**
+ * Classe responsável por organizar e carregar as imagens para a aplicação
+ */
+
 public class Images{
   private ArrayList<Image> circuitImages;
   private BufferedImageLoader loader;
@@ -25,7 +29,7 @@ public class Images{
     }
   }
 
- 
+
   public Image getBackgroundImage(){
     return this.backgroundImage;
   }

@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.BorderFactory;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
@@ -18,13 +19,19 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-
+/**
+ * Classe responsável por desenhar e redesenhar o background
+ * Cria os controles existentes e seta seus listerners
+ * que fazem as alterações nas Threads respectivas
+ */
 public class Background extends JPanel{
   private RotateImage rotate;
   private Images images;
   private Image backgroundImage, roadImage, carsImage;
 
+  private ArrayList<CarThread> carList;
   private ArrayList<JSlider> sliders;
+  private ArrayList<JCheckBox> checkboxes;
   private ArrayList<JLabel> circuitLabels;
   private ArrayList<ImageIcon> circuitIcons;
 
@@ -35,6 +42,8 @@ public class Background extends JPanel{
     this.setLayout(null);
 
     this.sliders = new ArrayList<JSlider>();
+    this.carList = new ArrayList<CarThread>();
+    this.checkboxes = new ArrayList<JCheckBox>();
     this.circuitLabels = new ArrayList<JLabel>();
     this.circuitIcons = new ArrayList<ImageIcon>();
     this.rotate = new RotateImage();
@@ -82,35 +91,34 @@ public class Background extends JPanel{
     this.repaint();
   }
 
-
   public void initThreads(){
-    ThreadSonic sonic = new ThreadSonic(carsImage, this);
-    ThreadShadow shadow = new ThreadShadow(carsImage, this);
-    ThreadAmy amy = new ThreadAmy(carsImage, this);
-    ThreadKnuckles knuckles = new ThreadKnuckles(carsImage, this);
-    ThreadTails tails = new ThreadTails(carsImage, this);
-    ThreadRouge rouge = new ThreadRouge(carsImage, this);
-    ThreadEggman eggman = new ThreadEggman(carsImage, this);
+    ThreadSonic sonic = new ThreadSonic(carsImage, 1055, 580, this);
+    // System.out.println("Sonic: " + sonic.getCar().getX());
+    carList.add(sonic);
+    ThreadShadow shadow = new ThreadShadow(carsImage, 542, 595, this);
+    carList.add(shadow);
+    ThreadAmy amy = new ThreadAmy(carsImage, 225, 152, this);
+    carList.add(amy);
+    ThreadKnuckles knuckles = new ThreadKnuckles(carsImage, 920, 47, this);
+    carList.add(knuckles);
+    ThreadTails tails = new ThreadTails(carsImage, 225, 595, this);
+    carList.add(tails);
+    ThreadRouge rouge = new ThreadRouge(carsImage, 542, 371, this);
+    carList.add(rouge);
+    ThreadEggman eggman = new ThreadEggman(carsImage, 225, 255, this);
+    carList.add(eggman);
 
-    this.createSpeedBar(sonic, shadow, amy, knuckles, tails, rouge, eggman);
+    this.createCheckBoxes();
+    this.createSpeedBars();
 
-    sonic.start();
-    shadow.start();
-    amy.start();
-    knuckles.start();
-    tails.start();
-    rouge.start();
-    eggman.start();
+    this.addListener();
 
+    for(CarThread c : carList){
+      c.start();
+    }
   }
 
-
-  private void createSpeedBar(
-    ThreadSonic sonic, ThreadShadow shadow,
-    ThreadAmy amy, ThreadKnuckles knuckles, ThreadTails tails,
-    ThreadRouge rouge, ThreadEggman eggman
-  )
-  {
+  private void createSpeedBars(){
     int x = 1130;
     int y = 120;
     int width = 230;
@@ -151,9 +159,15 @@ public class Background extends JPanel{
     sliders.get(4).setBackground(Color.yellow);
     sliders.get(5).setBackground(Color.gray);
     sliders.get(6).setBackground(Color.darkGray);
+  }
 
-
-    this.addListener(sonic, shadow, amy, knuckles, tails, rouge, eggman);
+  private void createCheckBoxes(){
+    for(int i=0; i<7; i++){
+      JCheckBox checkbox = new JCheckBox();
+      checkbox.setBounds(1360, 120+50*i, 25, 25);
+      checkboxes.add(checkbox);
+      this.add(checkbox);
+    }
   }
 
 
@@ -184,66 +198,26 @@ public class Background extends JPanel{
     }
   }
 
+  private void addListener(){
+    for(int i=0; i<7; i++){
+      checkboxes.get(i).addChangeListener(new ChangeListener() {
+        public void stateChanged(ChangeEvent e){
+          JCheckBox check = (JCheckBox)e.getSource();
+          // TO DO
+        }
+      });
+    }
 
-  private void addListener(
-    ThreadSonic sonic, ThreadShadow shadow,
-    ThreadAmy amy, ThreadKnuckles knuckles, ThreadTails tails,
-    ThreadRouge rouge, ThreadEggman eggman
-  ){
-    sliders.get(0).addChangeListener(new ChangeListener (){
-      public void stateChanged(ChangeEvent e){
-        JSlider slider = (JSlider)e.getSource();
-        sonic.setSleepTime(slider.getValue());
-        sonic.getSonic().setSpeed(slider.getValue());
-      }
-    });
+    for(int j = 0; j < 7; j++){
+      CarThread c = carList.get(j);
 
-    sliders.get(1).addChangeListener(new ChangeListener (){
-      public void stateChanged(ChangeEvent e){
-        JSlider slider = (JSlider)e.getSource();
-        shadow.setSleepTime(slider.getValue());
-        shadow.getShadow().setSpeed(slider.getValue());
-      }
-    });
-
-    sliders.get(2).addChangeListener(new ChangeListener (){
-      public void stateChanged(ChangeEvent e){
-        JSlider slider = (JSlider)e.getSource();
-        amy.setSleepTime(slider.getValue());
-        amy.getAmy().setSpeed(slider.getValue());
-      }
-    });
-
-    sliders.get(3).addChangeListener(new ChangeListener (){
-      public void stateChanged(ChangeEvent e){
-        JSlider slider = (JSlider)e.getSource();
-        knuckles.setSleepTime(slider.getValue());
-        knuckles.getKnuckles().setSpeed(slider.getValue());
-      }
-    });
-
-    sliders.get(4).addChangeListener(new ChangeListener (){
-      public void stateChanged(ChangeEvent e){
-        JSlider slider = (JSlider)e.getSource();
-        tails.setSleepTime(slider.getValue());
-        tails.getTails().setSpeed(slider.getValue());
-      }
-    });
-    sliders.get(5).addChangeListener(new ChangeListener (){
-      public void stateChanged(ChangeEvent e){
-        JSlider slider = (JSlider)e.getSource();
-        rouge.setSleepTime(slider.getValue());
-        rouge.getRouge().setSpeed(slider.getValue());
-      }
-    });
-    sliders.get(6).addChangeListener(new ChangeListener (){
-      public void stateChanged(ChangeEvent e){
-        JSlider slider = (JSlider)e.getSource();
-        eggman.setSleepTime(slider.getValue());
-        eggman.getEggman().setSpeed(slider.getValue());
-      }
-    });
+      sliders.get(j).addChangeListener(new ChangeListener (){
+        public void stateChanged(ChangeEvent e){
+          JSlider slider = (JSlider)e.getSource();
+          c.setSleepTime(slider.getValue());
+          c.getCar().setSpeed(slider.getValue());
+        }
+      });
+    }
   }
-
-
 }
